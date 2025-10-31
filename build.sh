@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-DOCKERHUB_USER="your-dockerhub-username"
-DEV_REPO="$DOCKERHUB_USER/devops-build-dev"
-PROD_REPO="$DOCKERHUB_USER/devops-build-prod"
+DOCKERHUB_USER=priyadharshini030722
+DEV_REPO="priyadharshini030722/devops-build-dev"
+PROD_REPO="priyadharshini030722/devops-build-prod"
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 IMAGE_TAG=$(git rev-parse --short HEAD)
 
