@@ -13,13 +13,6 @@ pipeline {
       }
     }
 
-    stage('Build React App') {
-      steps {
-        sh 'npm install'
-        sh 'npm run build'
-      }
-    }
-
     stage('Docker Build & Push') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
