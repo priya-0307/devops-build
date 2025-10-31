@@ -1,41 +1,46 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        EC2_KEY = credentials('ec2-key')
+  environment {
+    DOCKERHUB_USER = 'priyadharshini030722'
+    IMAGE_NAME = "${DOCKERHUB_USER}/devops-build"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'dev', url: 'https://github.com/priya-0307/devops-build.git'
+      }
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                ansiColor('xterm') {
-                    sh './build.sh'
-                }
-            }
-        }
-
-        stage('Deploy to EC2') {
-            steps {
-                ansiColor('xterm') {
-                    sh './deploy.sh'
-                }
-            }
-        }
+    stage('Build React App') {
+      steps {
+        sh 'npm install'
+        sh 'npm run build'
+      }
     }
 
-    post {
-        success {
-            echo "Build and deployment successful!"
+    stage('Docker Build & Push') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          script {
+            sh '''
+              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              docker build -t $IMAGE_NAME:latest .
+              docker push $IMAGE_NAME:latest
+            '''
+          }
         }
-        failure {
-            echo " Build failed. Check logs."
-        }
+      }
     }
+  }
+
+  post {
+    success {
+      echo 'Build and push successful ✅'
+    }
+    failure {
+      echo 'Build failed ❌'
+    }
+  }
 }
