@@ -24,6 +24,8 @@ pipeline {
             )
           ]) {
             sh '''
+              cd $WORKSPACE   # make sure we're in repo root
+              ls -al          # debug: confirm Dockerfile + package.json exist
               echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
               docker build -t $IMAGE_NAME:latest .
               docker push $IMAGE_NAME:latest
