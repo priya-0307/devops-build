@@ -13,28 +13,27 @@ pipeline {
       }
     }
 
-
-   stage('Docker Build & Push') {
-  steps {
-    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-      script {
-        sh '''
-          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-          docker build -t $IMAGE_NAME:latest .
-          docker push $IMAGE_NAME:latest
-        '''
+    stage('Docker Build & Push') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          script {
+            sh '''
+              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              docker build -t $IMAGE_NAME:latest .
+              docker push $IMAGE_NAME:latest
+            '''
+          }
+        }
       }
     }
   }
-}
-
 
   post {
     success {
-      echo 'Build and push successful '
+      echo '✅ Build and push successful'
     }
     failure {
-      echo 'Build failed '
+      echo '❌ Build failed'
     }
   }
 }
