@@ -3,7 +3,8 @@ pipeline {
 
   environment {
     DOCKERHUB_USER = 'priyadharshini030722'
-    IMAGE_NAME = "${DOCKERHUB_USER}/devops-build"
+    DEV_REPO = "${DOCKERHUB_USER}/devops-build-dev"
+    PROD_REPO = "${DOCKERHUB_USER}/devops-build-prod"
     EC2_HOST = 'ubuntu@3.6.92.70'
     EC2_KEY = 'key-pair-1.pem' 
   }
