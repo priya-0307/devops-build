@@ -1,3 +1,4 @@
+
 pipeline {
   agent any
 
@@ -16,6 +17,13 @@ pipeline {
     stage('Docker Build & Push') {
       steps {
         script {
+            // Define the image name based on the branch
+          def branch = env.BRANCH_NAME ?: 'dev'
+          if (branch == 'main' || branch == 'prod') {
+            env.IMAGE_NAME = "${DOCKERHUB_USER}/devops-build-prod"
+          } else {
+            env.IMAGE_NAME = "${DOCKERHUB_USER}/devops-build-dev"
+          }
           withCredentials([
             usernamePassword(
               credentialsId: 'dockerhub-creds',
