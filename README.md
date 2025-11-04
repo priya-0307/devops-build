@@ -22,7 +22,7 @@
 --> Build and run the application using Docker:
 
        # docker build -t my-react-app .
-       # docker run -d -p 3000:3000 my-react-app
+       # docker run -d -p 80:80 my-react-app
 
 
 --> Create two bash scripts and make them executable:
