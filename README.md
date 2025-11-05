@@ -106,3 +106,7 @@ Application accessible at:
       # Node Exporter collects EC2-level metrics (CPU, memory, disk).
 
       # Alertmanager sends alerts when metrics cross thresholds (e.g., app down).
+
+
+--> Screen shot for execution process.
+      https://github.com/priya-0307/project-3-screenshot.git
