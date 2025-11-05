@@ -1,4 +1,3 @@
-
 pipeline {
   agent any
 
@@ -20,7 +19,7 @@ pipeline {
     stage('Docker Build & Push') {
       steps {
         script {
-            // Define the image name based on the branch
+           
           def branch = env.BRANCH_NAME ?: 'dev'
           if (branch == 'main' || branch == 'prod') {
             env.IMAGE_NAME = "${DOCKERHUB_USER}/devops-build-prod"
@@ -35,12 +34,25 @@ pipeline {
             )
           ]) {
             sh '''
-              cd $WORKSPACE   # make sure we're in repo root
-              ls -al          # debug: confirm Dockerfile + package.json exist
+              cd $WORKSPACE   
+              ls -al          
               echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
               docker build -t $IMAGE_NAME:latest .
               docker push $IMAGE_NAME:latest
             '''
+          }
+           stage('Deploy to EC2') {
+      steps {
+        script {
+        
+          sh '''
+            echo " Deploying application to EC2 instance..."
+            chmod 400 $EC2_KEY
+
+            ssh -o StrictHostKeyChecking=no -i $EC2_KEY $EC2_HOST << 'EOF'
+              echo "Pulling latest image from Docker Hub..."
+              docker pull ${IMAGE_NAME}:latest
+            }
           }
         }
       }
